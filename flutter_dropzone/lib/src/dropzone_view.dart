@@ -27,6 +27,8 @@ class DropzoneView extends StatefulWidget {
   /// Event called when the dropzone view is hovered during a drag-drop.
   final VoidCallback? onHover;
 
+  final VoidCallback? onDropCompleted;
+
   /// Event called when the user drops a file onto the dropzone.
   final ValueChanged<dynamic> onDrop;
 
@@ -44,6 +46,7 @@ class DropzoneView extends StatefulWidget {
     this.onError,
     this.onHover,
     required this.onDrop,
+    required this.onDropCompleted,
     this.onLeave,
   }) : super(key: key);
 
@@ -92,7 +95,7 @@ class DropzoneViewController {
     }
     FlutterDropzonePlatform.instance //
         .onDrop(viewId: viewId)
-        .listen((msg) => widget.onDrop(msg.value));
+        .listen((msg) => widget.onDrop(msg.value), onDone: () => widget.onDropCompleted?.call(),);
     if (widget.onLeave != null) {
       FlutterDropzonePlatform.instance //
           .onLeave(viewId: viewId)
